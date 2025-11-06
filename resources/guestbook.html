@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гостевая книга</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Гостевая книга</h1>
+
+        <form action="/submit" method="POST">
+            <label for="name">Ваше имя:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="message">Сообщение:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Отправить</button>
+        </form>
+
+        <h2>Сообщения:</h2>
+        <!-- MESSAGES_LIST -->  <!-- Здесь сервер вставит динамический список -->
+
+        <a href="/logout">Выйти</a>
+    </div>
+</body>
+</html>
