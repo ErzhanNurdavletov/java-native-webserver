@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход в онлайн-книгу отзывов и пожеланий</title>
+    <title>Регистрация</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Авторизация</h1>
-        <form action="/login" method="POST">
-            <label for="username">Имя пользователя:</label>
+        <h1>Регистрация</h1>
+        <form action="/register" method="POST">
+            <label for="username">Логин:</label>
             <input type="text" id="username" name="username" required>
 
             <label for="password">Пароль:</label>
             <input type="password" id="password" name="password" required>
 
-            <button type="submit">Войти</button>
+            <button type="submit">Зарегистрироваться</button>
         </form>
-        <p>Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+        <p>Уже есть аккаунт? <a href="/">Войти</a></p>
     </div>
 </body>
 </html>

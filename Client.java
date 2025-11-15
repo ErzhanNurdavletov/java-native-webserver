@@ -25,14 +25,16 @@ public class Client implements Runnable {
     while (true) {
       try {
         if (in != null) {
-         int unicode = in.read();
-         if (unicode == -1) break;
-         char symbol = (char)unicode;
-         requestBuilder.append(symbol);
-         System.out.print(symbol);
-         if (in.available() == 0) {
-           break;
-         }
+          int unicode = in.read();
+          if (unicode == -1) {
+            break;
+          }
+          char symbol = (char) unicode;
+          requestBuilder.append(symbol);
+          System.out.print(symbol);
+          if (in.available() == 0) {
+            break;
+          }
         }
       } catch (IOException ioe) {
         System.out.println("Error " + ioe);
@@ -40,11 +42,10 @@ public class Client implements Runnable {
     }
     String request = requestBuilder.toString();
     try {
-      // Вызываем обработчик из нового класса
       Handler.processRequest(request, clientSocket);
-   } catch(IOException ioe) {
-     System.out.println("Error in OutputStream");
-   }
+    } catch(IOException ioe) {
+      System.out.println("Error in OutputStream");
+    }
   }
   public void go() {
     thread.start();
