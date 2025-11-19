@@ -1,17 +1,18 @@
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.IOException;
 
 public class WebServer {
 
   private ServerSocket serverSocket;
-  private Object lock;
-  private boolean flag;
+  private final Object lock;
+  private final RequestHandler requestHandler;
 
-  WebServer(int port) {
+  WebServer(int port, RequestHandler requestHandler) {
+    this.requestHandler = requestHandler;
+    lock = new Object();
     try {
       serverSocket = new ServerSocket(port);
-      lock = new Object();
     } catch (IOException ioe) {
       System.out.println("Server socket error " + ioe);
     }
@@ -22,7 +23,7 @@ public class WebServer {
       try {
         Socket socket = serverSocket.accept();
         synchronized(lock) {
-          Client client = new Client(socket);
+          Client client = new Client(socket, requestHandler);
           client.go();
         }
       } catch (IOException ioe) {

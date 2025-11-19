@@ -1,52 +1,61 @@
-import java.net.Socket;
-import java.io.InputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.BufferedOutputStream;
+import java.io.InputStream;
+import java.net.Socket;
 
 public class Client implements Runnable {
   private Socket clientSocket;
   private Thread thread;
-  public Client(Socket clientSocket) {
+  private RequestHandler requestHandler;
+
+  public Client(Socket clientSocket, RequestHandler requestHandler) {
     this.clientSocket = clientSocket;
+    this.requestHandler = requestHandler;
     thread = new Thread(this);
   }
+
   public void run() {
     System.out.println("Processing client.");
     System.out.println(clientSocket);
-    InputStream in = null;
+
+    InputStream inputStream = null;
     try {
-      in = clientSocket.getInputStream();
+      inputStream = clientSocket.getInputStream();
     } catch (IOException ioe) {
       System.out.println("Error in InputStream" + ioe);
+      return;
     }
     StringBuilder requestBuilder = new StringBuilder();
-    while (true) {
-      try {
-        if (in != null) {
-          int unicode = in.read();
-          if (unicode == -1) {
-            break;
-          }
-          char symbol = (char) unicode;
-          requestBuilder.append(symbol);
-          System.out.print(symbol);
-          if (in.available() == 0) {
-            break;
-          }
+    try {
+      while (true) {
+        int unicode = inputStream.read();
+        if (unicode == -1) {
+          break;
         }
-      } catch (IOException ioe) {
-        System.out.println("Error " + ioe);
+        char symbol = (char) unicode;
+        requestBuilder.append(symbol);
+        System.out.print(symbol);
+        if (inputStream.available() == 0) {
+          break;
+        }
       }
+    } catch (IOException ioe) {
+      System.out.println("Error reading request: " + ioe);
     }
+
     String request = requestBuilder.toString();
     try {
-      Handler.processRequest(request, clientSocket);
+      requestHandler.processRequest(request, clientSocket);
     } catch(IOException ioe) {
-      System.out.println("Error in OutputStream");
+      System.out.println("Error processing request in Handler: " + ioe);
+    } finally {
+      try {
+        clientSocket.close();
+      } catch (IOException e) {
+        System.out.println("Error closing socket: " + e);
+      }
     }
   }
+
   public void go() {
     thread.start();
   }
